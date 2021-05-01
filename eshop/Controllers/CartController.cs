@@ -14,6 +14,15 @@ namespace eshop.Controllers
 {
     public class CartController : Controller
     {
+        private readonly ILogger<CartController> _logger;
+        private readonly ICatalogService _catalogService;
+
+        public CartController(ILogger<CartController> logger, ICatalogService catalogService)
+        {
+            _logger = logger;
+            _catalogService = catalogService;
+        }
+
         public IActionResult Index()
         {
             var cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
@@ -28,7 +37,7 @@ namespace eshop.Controllers
             if (SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart") == null)
             {
                 List<Item> cart = new List<Item>();
-                cart.Add(new Item { Product = CatalogService.Find(id), Quantity = 1 });
+                cart.Add(new Item { Product = _catalogService.GetProductById(id), Quantity = 1 });
                 SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
             }
             else
@@ -41,7 +50,7 @@ namespace eshop.Controllers
                 }
                 else
                 {
-                    cart.Add(new Item { Product = CatalogService.Find(id), Quantity = 1 });
+                    cart.Add(new Item { Product = _catalogService.GetProductById(id), Quantity = 1 });
                 }
                 SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
             }

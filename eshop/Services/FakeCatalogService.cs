@@ -4,11 +4,11 @@ using eshop.Models;
 
 namespace eshop.Services
 {
-    public static class CatalogService
+    public class FakeCatalogService : ICatalogService
     {
-        private static readonly List<Product> _products;
+        private readonly List<Product> _products;
 
-        static CatalogService()
+        public FakeCatalogService()
         {
             _products = new List<Product>();
             _products.Add(new Product{
@@ -28,12 +28,12 @@ namespace eshop.Services
             });
         }
 
-        public static List<Product> List()
+        public List<Product> GetProducts()
         {
             return _products;
         }
 
-        public static Product Find(string id)
+        public Product GetProductById(string id)
         {
             return _products.SingleOrDefault(p => p.Id == id);
         }
