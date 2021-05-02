@@ -25,8 +25,7 @@ namespace eshop
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<ICatalogService>(new FakeCatalogService());
-            services.AddControllersWithViews();
-            services.AddSession();
+            services.AddControllersWithViews().AddDapr();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,8 +43,6 @@ namespace eshop
             }
             app.UseHttpsRedirection();
 
-            app.UseSession();
-            
             app.UseStaticFiles();
 
             app.UseRouting();

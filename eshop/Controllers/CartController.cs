@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Dapr;
+using Dapr.Client;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,13 +9,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using eshop.Models;
-using eshop.Helpers;
 using eshop.Services;
 
 namespace eshop.Controllers
 {
     public class CartController : Controller
     {
+        private const string StoreName = "statestore";
+        private readonly string _userId = "anonymous";
         private readonly ILogger<CartController> _logger;
         private readonly ICatalogService _catalogService;
 
@@ -23,61 +26,42 @@ namespace eshop.Controllers
             _catalogService = catalogService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index([FromServices] DaprClient daprClient)
         {
-            var cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
-            ViewBag.cart = cart;
-            ViewBag.total = cart.Sum(item => item.Product.Price * item.Quantity);
+            var state = await daprClient.GetStateEntryAsync<List<Item>>(StoreName, _userId);
+            ViewBag.cart = state.Value;
+            ViewBag.total = state.Value.Sum(item => item.Product.Price * item.Quantity);
             return View();
         }
 
-        public IActionResult Buy(string id)
+        public async Task<IActionResult> Buy(string id, [FromServices] DaprClient daprClient)
         {
-            List<Product> productModel = new List<Product>();
-            if (SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart") == null)
+            _logger.LogDebug("Enter Buy");
+            var state = await daprClient.GetStateEntryAsync<List<Item>>(StoreName, _userId);
+            if (state.Value == null)
             {
-                List<Item> cart = new List<Item>();
-                cart.Add(new Item { Product = _catalogService.GetProductById(id), Quantity = 1 });
-                SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
+                state.Value = new List<Item>();
+                state.Value.Add(new Item { Product = _catalogService.GetProductById(id), Quantity = 1 }); 
             }
             else
             {
-                List<Item> cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
-                int index = isExist(id);
+                int index = state.Value.FindIndex(i => i.Product.Id == id);
                 if (index != -1)
-                {
-                    cart[index].Quantity++;
-                }
+                    state.Value[index].Quantity++;
                 else
-                {
-                    cart.Add(new Item { Product = _catalogService.GetProductById(id), Quantity = 1 });
-                }
-                SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
+                    state.Value.Add(new Item { Product = _catalogService.GetProductById(id), Quantity = 1 });
             }
+            await state.SaveAsync();
             return RedirectToAction("Index");
         }
 
-        public IActionResult Remove(string id)
+        public async Task<IActionResult> Remove(string id, [FromServices] DaprClient daprClient)
         {
-            List<Item> cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
-            int index = isExist(id);
-            cart.RemoveAt(index);
-            SessionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
+            var state = await daprClient.GetStateEntryAsync<List<Item>>(StoreName, _userId);
+            int index = state.Value.FindIndex(i => i.Product.Id == id);
+            state.Value.RemoveAt(index);
+            await state.SaveAsync();
             return RedirectToAction("Index");
         }
-
-        private int isExist(string id)
-        {
-            List<Item> cart = SessionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
-            for (int i = 0; i < cart.Count; i++)
-            {
-                if (cart[i].Product.Id.Equals(id))
-                {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
     }
 }
