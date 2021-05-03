@@ -61,16 +61,33 @@ resource "azurerm_role_assignment" "aks_sp_container_registry" {
   principal_id         = azuread_service_principal.k8s.object_id
 }
 
+resource "azurerm_virtual_network" "k8s" {
+  name                = "${var.prefix}-vnet"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  address_space       = ["10.0.0.0/8"]
+}
+
+resource "azurerm_subnet" "k8s" {
+  name                 = "default"
+  resource_group_name  = azurerm_resource_group.rg.name
+  virtual_network_name = azurerm_virtual_network.k8s.name
+  address_prefixes     = ["10.240.0.0/16"]
+}
+
 resource "azurerm_kubernetes_cluster" "k8s" {
   name                = "${var.prefix}-aks"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   dns_prefix          = var.dns_aks
+  kubernetes_version  = var.kubernetes_version
 
   default_node_pool {
     name                = "agentpool"
+    availability_zones  = ["1", "2", "3"]
+    vnet_subnet_id      = azurerm_subnet.k8s.id
     enable_auto_scaling = true
-    min_count           = 1
+    min_count           = 3
     max_count           = var.max_agent_count
     vm_size             = var.agent_vm_size
   }
@@ -85,10 +102,28 @@ resource "azurerm_kubernetes_cluster" "k8s" {
       enabled                    = true
       log_analytics_workspace_id = azurerm_log_analytics_workspace.k8s.id
     }
+    azure_policy {
+      enabled = false
+    }
+    http_application_routing {
+      enabled = false
+    }
   }
 
   network_profile {
     load_balancer_sku = "Standard"
-    network_plugin    = "kubenet"
+    network_plugin    = "azure"
+    network_policy    = "azure"
+  }
+
+  role_based_access_control {
+    enabled = true
+  }
+
+  provisioner "local-exec" {
+    command = <<-EOT
+      az aks get-credentials -g ${azurerm_resource_group.rg.name} -n ${azurerm_kubernetes_cluster.k8s.name} --overwrite-existing
+      dapr init -k --enable-ha=true
+    EOT
   }
 }
