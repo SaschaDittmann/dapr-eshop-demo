@@ -100,7 +100,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
 
   service_principal {
     client_id     = azuread_service_principal.k8s.application_id
-    client_secret = random_password.spn.result
+    client_secret = azuread_service_principal_password.k8s.value
   }
 
   addon_profile {
