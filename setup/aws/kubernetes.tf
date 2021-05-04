@@ -1,3 +1,16 @@
+resource "null_resource" "deploy_dapr_components" {
+  provisioner "local-exec" {
+    command = <<-EOT
+      kubectl config use-context '${module.eks.cluster_arn}'
+      kubectl apply -f components/.
+    EOT
+  }
+
+  depends_on = [
+    null_resource.install_dapr
+  ]
+}
+
 resource "null_resource" "build_images" {
   provisioner "local-exec" {
     command = <<-EOT
@@ -29,6 +42,7 @@ module "kubernetes" {
   image_webshop = "${aws_ecr_repository.webshop.repository_url}:latest"
 
   depends_on = [
-    null_resource.build_images
+    null_resource.build_images,
+    null_resource.deploy_dapr_components
   ]
 }

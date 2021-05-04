@@ -38,7 +38,6 @@ resource "null_resource" "install_dapr" {
     command = <<-EOT
       aws eks --region ${var.region} update-kubeconfig --name ${local.cluster_name}
       dapr init -k --enable-ha=true --wait
-      kubectl apply -f components/.
     EOT
   }
 
