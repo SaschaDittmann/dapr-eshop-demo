@@ -46,7 +46,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   provisioner "local-exec" {
     command = <<-EOT
       az aks get-credentials -g ${azurerm_resource_group.rg.name} -n ${azurerm_kubernetes_cluster.k8s.name} --overwrite-existing
-      dapr init -k --enable-ha=true
+      dapr init -k --enable-ha=true --wait
       kubectl apply -f components/.
     EOT
   }
