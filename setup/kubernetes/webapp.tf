@@ -25,7 +25,7 @@ resource "kubernetes_deployment" "webapp" {
       }
       spec {
         container {
-          image             = "${var.container_registry_endpoint}/webapp:latest"
+          image             = var.image_webapp
           name              = "aspnet"
           image_pull_policy = "Always"
           port {

@@ -1,4 +1,4 @@
-variable "container_registry_endpoint" {
+variable "image_webapp" {
   type        = string
-  description = "Endpoint of the Private Container Registry"
+  description = "Docker Image for the eshop web app"
 }

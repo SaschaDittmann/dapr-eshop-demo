@@ -12,7 +12,7 @@ resource "kubernetes_secret" "cosmosdb" {
 module "kubernetes" {
   source = "../kubernetes"
 
-  container_registry_endpoint = azurerm_container_registry.acr.login_server
+  image_webapp = "${azurerm_container_registry.acr.login_server}/webapp:latest"
 
   depends_on = [
     azurerm_kubernetes_cluster.k8s
