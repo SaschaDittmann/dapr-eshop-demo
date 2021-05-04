@@ -25,7 +25,7 @@ resource "kubernetes_deployment" "webapp" {
       }
       spec {
         container {
-          image             = "${azurerm_container_registry.acr.login_server}/webapp:latest"
+          image             = "${var.container_registry_endpoint}/webapp:latest"
           name              = "aspnet"
           image_pull_policy = "Always"
           port {

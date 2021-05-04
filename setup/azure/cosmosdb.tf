@@ -30,14 +30,3 @@ resource "azurerm_cosmosdb_sql_container" "states" {
   partition_key_version = 1
   throughput            = 400
 }
-
-resource "kubernetes_secret" "cosmosdb" {
-  metadata {
-    name = "azure-cosmosdb"
-  }
-  data = {
-    url       = "${azurerm_cosmosdb_account.cosmosdb.endpoint}"
-    masterKey = "${azurerm_cosmosdb_account.cosmosdb.primary_key}"
-  }
-  type = "Opaque"
-}
