@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using Dapr;
-using Dapr.Client;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
+using Dapr.Client;
 using eshop.Models;
 using eshop.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace eshop.Controllers
 {
