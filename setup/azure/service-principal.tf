@@ -17,3 +17,12 @@ resource "azuread_service_principal_password" "k8s" {
   value                = random_password.spn.result
   end_date_relative    = "240h"
 }
+
+resource "null_resource" "delay_after_sp_created" {
+  provisioner "local-exec" {
+    command = "sleep 60"
+  }
+  triggers = {
+    "before" = azuread_service_principal_password.k8s.value
+  }
+}
