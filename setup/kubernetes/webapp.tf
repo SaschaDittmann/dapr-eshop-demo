@@ -1,31 +1,31 @@
-resource "kubernetes_deployment" "webapp" {
+resource "kubernetes_deployment" "webshop" {
   metadata {
-    name = "webapp"
+    name = "webshop"
     labels = {
-      app = "webapp"
+      app = "webshop"
     }
   }
   spec {
     replicas = 2
     selector {
       match_labels = {
-        app = "webapp"
+        app = "webshop"
       }
     }
     template {
       metadata {
         labels = {
-          app = "webapp"
+          app = "webshop"
         }
         annotations = {
           "dapr.io/enabled"  = "true"
-          "dapr.io/app-id"   = "eshop"
+          "dapr.io/app-id"   = "webshop"
           "dapr.io/app-port" = "80"
         }
       }
       spec {
         container {
-          image             = var.image_webapp
+          image             = var.image_webshop
           name              = "aspnet"
           image_pull_policy = "Always"
           port {
@@ -45,16 +45,16 @@ resource "kubernetes_deployment" "webapp" {
   }
 }
 
-resource "kubernetes_service" "webapp" {
+resource "kubernetes_service" "webshop" {
   metadata {
-    name = "webapp"
+    name = "webshop"
     labels = {
-      app = "webapp"
+      app = "webshop"
     }
   }
   spec {
     selector = {
-      app = kubernetes_deployment.webapp.metadata.0.labels.app
+      app = kubernetes_deployment.webshop.metadata.0.labels.app
     }
     port {
       protocol    = "TCP"

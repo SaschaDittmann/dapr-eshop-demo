@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using eshop.Models;
+using WebShop.Models;
 
-namespace eshop.Services
+namespace WebShop.Services
 {
     public class FakeCatalogService : ICatalogService
     {

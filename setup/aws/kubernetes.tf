@@ -1,9 +1,9 @@
 resource "null_resource" "build_images" {
   provisioner "local-exec" {
     command = <<-EOT
-      aws ecr get-login-password --region ${var.region} | docker login --username AWS --password-stdin ${aws_ecr_repository.webapp.repository_url}
-      docker build -t ${aws_ecr_repository.webapp.repository_url}:latest -f ../../Dockerfile.webapp ../..
-      docker push ${aws_ecr_repository.webapp.repository_url}:latest
+      aws ecr get-login-password --region ${var.region} | docker login --username AWS --password-stdin ${aws_ecr_repository.webshop.repository_url}
+      docker build -t ${aws_ecr_repository.webshop.repository_url}:latest -f ../../Dockerfile.webshop ../..
+      docker push ${aws_ecr_repository.webshop.repository_url}:latest
     EOT
   }
 
@@ -26,7 +26,7 @@ resource "kubernetes_secret" "dynamodb" {
 module "kubernetes" {
   source = "../kubernetes"
 
-  image_webapp = "${aws_ecr_repository.webapp.repository_url}:latest"
+  image_webshop = "${aws_ecr_repository.webshop.repository_url}:latest"
 
   depends_on = [
     null_resource.build_images

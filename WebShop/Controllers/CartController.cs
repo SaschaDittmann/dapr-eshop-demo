@@ -2,12 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Dapr.Client;
-using eshop.Models;
-using eshop.Services;
+using WebShop.Models;
+using WebShop.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace eshop.Controllers
+namespace WebShop.Controllers
 {
     public class CartController : Controller
     {

@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics;
-using eshop.Models;
-using eshop.Services;
+using WebShop.Models;
+using WebShop.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace eshop.Controllers
+namespace WebShop.Controllers
 {
     public class HomeController : Controller
     {

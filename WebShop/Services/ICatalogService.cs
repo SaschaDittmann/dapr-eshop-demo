@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using eshop.Models;
+using WebShop.Models;
 
-namespace eshop.Services
+namespace WebShop.Services
 {
     public interface ICatalogService
     {

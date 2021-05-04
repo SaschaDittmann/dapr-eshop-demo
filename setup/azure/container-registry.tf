@@ -7,7 +7,7 @@ resource "azurerm_container_registry" "acr" {
 
   provisioner "local-exec" {
     command = <<-EOT
-      az acr build -t ${self.login_server}/webapp -r ${self.name} --no-logs --no-wait ../.. -f ../../Dockerfile.webapp
+      az acr build -t ${self.login_server}/webshop -r ${self.name} --no-logs --no-wait ../.. -f ../../Dockerfile.webshop
     EOT
   }
 }
