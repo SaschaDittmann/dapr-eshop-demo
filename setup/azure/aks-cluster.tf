@@ -43,7 +43,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     enabled = true
   }
 
-  depends_on = ["null_resource.delay_after_sp_created"]
+  depends_on = [null_resource.delay_after_sp_created]
 
   provisioner "local-exec" {
     command = <<-EOT
