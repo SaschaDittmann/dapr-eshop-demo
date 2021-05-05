@@ -4,7 +4,7 @@ module "eks" {
   cluster_version             = var.eks_cluster_version
   subnets                     = module.vpc.private_subnets
   write_kubeconfig            = false
-  workers_additional_policies = concat(var.workers_additional_policies, ["arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"])
+  workers_additional_policies = concat(var.workers_additional_policies, [aws_iam_policy.eks_dapr.arn])
 
   vpc_id = module.vpc.vpc_id
 
