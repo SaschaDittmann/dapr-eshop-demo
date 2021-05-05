@@ -4,12 +4,19 @@ resource "azurerm_container_registry" "acr" {
   location            = azurerm_resource_group.rg.location
   sku                 = "Basic"
   admin_enabled       = false
+}
 
+resource "null_resource" "build_images" {
   provisioner "local-exec" {
     command = <<-EOT
-      az acr build -t ${self.login_server}/webshop -r ${self.name} --no-logs --no-wait ../.. -f ../../Dockerfile.webshop
+      az acr build -t ${azurerm_container_registry.acr.login_server}/webshop -r ${azurerm_container_registry.acr.name} --no-logs --no-wait ../../WebShop
+      az acr build -t ${azurerm_container_registry.acr.login_server}/catalog -r ${azurerm_container_registry.acr.name} --no-logs --no-wait ../../CatalogService
     EOT
   }
+
+  depends_on = [
+    azurerm_container_registry.acr
+  ]
 }
 
 resource "azurerm_role_assignment" "aks_sp_container_registry" {

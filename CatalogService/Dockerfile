@@ -1,15 +1,8 @@
 # https://hub.docker.com/_/microsoft-dotnet
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /source
-
-# copy csproj and restore as distinct layers
-COPY *.sln .
-COPY WebShop/*.csproj ./WebShop/
+COPY . .
 RUN dotnet restore
-
-# copy everything else and build app
-COPY WebShop/. ./WebShop/
-WORKDIR /source/WebShop
 RUN dotnet publish -c release -o /App --no-restore
 
 # final stage/image
@@ -17,4 +10,4 @@ FROM mcr.microsoft.com/dotnet/aspnet:5.0
 WORKDIR /App
 COPY --from=build /App ./
 EXPOSE 80
-ENTRYPOINT ["dotnet", "WebShop.dll"]
+ENTRYPOINT ["dotnet", "CatalogService.dll"]

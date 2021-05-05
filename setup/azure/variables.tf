@@ -35,3 +35,14 @@ variable "agent_vm_size" {
   default     = "Standard_DS2_v2"
   description = "VM size for the default AKS node pool"
 }
+
+variable "mysql_admin_username" {
+  type        = string
+  default     = "dapradmin"
+  description = "MySQL Admin Username"
+}
+
+variable "mysql_admin_password" {
+  type        = string
+  description = "MySQL Admin Password"
+}
