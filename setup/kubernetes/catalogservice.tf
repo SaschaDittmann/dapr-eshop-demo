@@ -36,23 +36,3 @@ resource "kubernetes_deployment" "product_catalog" {
     }
   }
 }
-
-resource "kubernetes_service" "product_catalog" {
-  metadata {
-    name = "productcatalog"
-    labels = {
-      app = "productcatalog"
-    }
-  }
-  spec {
-    selector = {
-      app = kubernetes_deployment.product_catalog.metadata.0.labels.app
-    }
-    port {
-      protocol    = "TCP"
-      port        = 80
-      target_port = 80
-    }
-    type = "LoadBalancer"
-  }
-}
