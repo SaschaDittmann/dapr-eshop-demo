@@ -14,7 +14,7 @@ resource "kubernetes_secret" "catalog_mysql" {
     name = "catalog-mysql"
   }
   data = {
-    url       = "${var.mysql_admin_username}@${azurerm_mysql_server.mysql.name}:${var.mysql_admin_password}@tcp(${azurerm_mysql_server.mysql.fqdn}:3306)/catalog?allowNativePasswords=true"
+    url = "${var.mysql_admin_username}@${azurerm_mysql_server.mysql.name}:${var.mysql_admin_password}@tcp(${azurerm_mysql_server.mysql.fqdn}:3306)/catalog?allowNativePasswords=true"
   }
   type = "Opaque"
 }
