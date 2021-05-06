@@ -34,13 +34,12 @@ namespace WebShop.Services
 
         public async Task<Product> GetProductById(string id)
         {
-            var data = new {id = id};
-            var productResponse = await _daprClient.InvokeMethodAsync<object, List<Product>>(
+            var product = await _daprClient.InvokeMethodAsync<object, Product>(
                 HttpMethod.Get,
                 "productcatalog",
-                "products",
-                data);
-            return productResponse.FirstOrDefault();
+                $"products/{id}",
+                null);
+            return product;
         }
 
         public void Dispose()
