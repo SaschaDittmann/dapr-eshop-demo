@@ -1,0 +1,16 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: email
+spec:
+  type: bindings.twilio.sendgrid
+  version: v1
+  metadata:
+  - name: emailFrom
+    secretKeyRef:
+      name: sendgrid
+      key: email-from
+  - name: apiKey
+    secretKeyRef:
+      name: sendgrid
+      key: api-key
