@@ -60,5 +60,21 @@ namespace WebShop.Controllers
             await state.SaveAsync();
             return RedirectToAction("Index");
         }
+
+        public async Task<IActionResult> Checkout([FromServices] DaprClient daprClient)
+        {
+            var state = await daprClient.GetStateEntryAsync<List<Item>>(StoreName, _userId);
+            var response = await daprClient.InvokeMethodAsync<List<Item>, dynamic>(
+                "orderservice",
+                "order",
+                state.Value
+            );
+            return RedirectToAction("Completed");
+        }
+
+        public IActionResult Completed()
+        {
+            return View();
+        }
     }
 }

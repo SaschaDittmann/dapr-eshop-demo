@@ -11,6 +11,7 @@ resource "null_resource" "build_images" {
     command = <<-EOT
       az acr build -t ${azurerm_container_registry.acr.login_server}/webshop -r ${azurerm_container_registry.acr.name} --no-logs --no-wait ../../WebShop
       az acr build -t ${azurerm_container_registry.acr.login_server}/catalog -r ${azurerm_container_registry.acr.name} --no-logs --no-wait ../../CatalogService
+      az acr build -t ${azurerm_container_registry.acr.login_server}/orderservice -r ${azurerm_container_registry.acr.name} --no-logs --no-wait ../../OrderService
     EOT
   }
 

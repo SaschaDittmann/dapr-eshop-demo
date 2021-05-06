@@ -13,3 +13,9 @@ variable "sendgrid_from" {
   type        = string
   description = "Sendgrid 'Email From' value"
 }
+
+variable "enable_aspnet_development" {
+  type        = bool
+  default     = false
+  description = "Enable ASP.NET Core Development mode"
+}

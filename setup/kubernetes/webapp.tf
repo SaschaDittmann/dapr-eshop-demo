@@ -28,6 +28,10 @@ resource "kubernetes_deployment" "webshop" {
           image             = var.image_webshop
           name              = "aspnet"
           image_pull_policy = var.image_pull_policy_webshop
+          env {
+            name = "ASPNETCORE_ENVIRONMENT"
+            value = "${var.enable_aspnet_development ? "Development" : "Production"}"  
+          }
           port {
             container_port = 80
           }

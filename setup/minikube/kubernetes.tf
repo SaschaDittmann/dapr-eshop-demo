@@ -1,10 +1,10 @@
 resource "null_resource" "build_images" {
   provisioner "local-exec" {
     command = <<-EOT
+      eval $(minikube docker-env)
       docker build -t dapr-eshop-webshop:latest ../../WebShop
       docker build -t dapr-eshop-catalog:latest ../../CatalogService
-      minikube image load dapr-eshop-webshop:latest
-      minikube image load dapr-eshop-catalog:latest
+      docker build -t dapr-eshop-orderservice:latest ../../OrderService
     EOT
   }
 }
@@ -51,12 +51,16 @@ resource "kubernetes_secret" "email" {
 module "kubernetes" {
   source = "../kubernetes"
 
-  image_webshop             = "dapr-eshop-webshop:latest"
-  replicas_webshop          = 1
-  image_pull_policy_webshop = "IfNotPresent"
-  image_catalog             = "dapr-eshop-catalog:latest"
-  replicas_catalog          = 1
-  image_pull_policy_catalog = "IfNotPresent"
+  image_webshop                  = "dapr-eshop-webshop:latest"
+  replicas_webshop               = 1
+  image_pull_policy_webshop      = "IfNotPresent"
+  image_catalog                  = "dapr-eshop-catalog:latest"
+  replicas_catalog               = 1
+  image_pull_policy_catalog      = "IfNotPresent"
+  image_orderservice             = "dapr-eshop-orderservice:latest"
+  replicas_orderservice          = 1
+  image_pull_policy_orderservice = "IfNotPresent"
+  enable_aspnet_development      = var.enable_aspnet_development
 
   depends_on = [
     null_resource.build_images,
