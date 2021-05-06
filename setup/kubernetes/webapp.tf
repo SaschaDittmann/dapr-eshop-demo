@@ -6,7 +6,7 @@ resource "kubernetes_deployment" "webshop" {
     }
   }
   spec {
-    replicas = 2
+    replicas = var.replicas_webshop
     selector {
       match_labels = {
         app = "webshop"
@@ -27,7 +27,7 @@ resource "kubernetes_deployment" "webshop" {
         container {
           image             = var.image_webshop
           name              = "aspnet"
-          image_pull_policy = "Always"
+          image_pull_policy = var.image_pull_policy_webshop
           port {
             container_port = 80
           }

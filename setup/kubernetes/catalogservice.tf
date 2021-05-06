@@ -6,7 +6,7 @@ resource "kubernetes_deployment" "product_catalog" {
     }
   }
   spec {
-    replicas = 2
+    replicas = var.replicas_catalog
     selector {
       match_labels = {
         app = "productcatalog"
@@ -27,7 +27,7 @@ resource "kubernetes_deployment" "product_catalog" {
         container {
           image             = var.image_catalog
           name              = "aspnet"
-          image_pull_policy = "Always"
+          image_pull_policy = var.image_pull_policy_catalog
           port {
             container_port = 80
           }
