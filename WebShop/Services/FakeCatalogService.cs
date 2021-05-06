@@ -34,12 +34,12 @@ namespace WebShop.Services
 
         public async Task<IEnumerable<Product>> GetProducts()
         {
-            return _products;
+            return await Task.FromResult(_products);
         }
 
         public async Task<Product> GetProductById(string id)
         {
-            return _products.SingleOrDefault(p => p.Id == id);
+            return await Task.FromResult(_products.SingleOrDefault(p => p.Id == id));
         }
     }
 }
