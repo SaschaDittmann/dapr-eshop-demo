@@ -78,6 +78,13 @@ resource "kubernetes_deployment" "mysql" {
             name       = "mysql-persistent-storage"
             mount_path = "/var/lib/mysql"
           }
+          liveness_probe {
+            tcp_socket {
+              port = 3306
+            }
+            initial_delay_seconds = 15
+            period_seconds        = 20
+          }
         }
         volume {
           name = "mysql-persistent-storage"

@@ -29,8 +29,8 @@ resource "kubernetes_deployment" "orderservice" {
           name              = "aspnet"
           image_pull_policy = var.image_pull_policy_orderservice
           env {
-            name = "ASPNETCORE_ENVIRONMENT"
-            value = "${var.enable_aspnet_development ? "Development" : "Production"}"  
+            name  = "ASPNETCORE_ENVIRONMENT"
+            value = var.enable_aspnet_development ? "Development" : "Production"
           }
           port {
             container_port = 80

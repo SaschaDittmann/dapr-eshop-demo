@@ -29,8 +29,8 @@ resource "kubernetes_deployment" "product_catalog" {
           name              = "aspnet"
           image_pull_policy = var.image_pull_policy_catalog
           env {
-            name = "ASPNETCORE_ENVIRONMENT"
-            value = "${var.enable_aspnet_development ? "Development" : "Production"}"  
+            name  = "ASPNETCORE_ENVIRONMENT"
+            value = var.enable_aspnet_development ? "Development" : "Production"
           }
           port {
             container_port = 80
