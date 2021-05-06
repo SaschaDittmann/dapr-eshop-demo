@@ -30,6 +30,27 @@ resource "kubernetes_secret" "email" {
   type = "Opaque"
 }
 
+resource "kubernetes_secret" "eventhub" {
+  metadata {
+    name = "azure-eventhub"
+  }
+  data = {
+    connectionString = azurerm_eventhub_authorization_rule.pubsub.primary_connection_string
+  }
+  type = "Opaque"
+}
+
+resource "kubernetes_secret" "storage_account" {
+  metadata {
+    name = "azure-storageaccount"
+  }
+  data = {
+    storageaccountname = azurerm_storage_account.main.name
+    storageaccountkey = azurerm_storage_account.main.primary_access_key
+  }
+  type = "Opaque"
+}
+
 module "kubernetes" {
   source = "../kubernetes"
 
@@ -41,6 +62,8 @@ module "kubernetes" {
   depends_on = [
     azurerm_kubernetes_cluster.k8s,
     kubernetes_secret.catalog_mysql,
-    kubernetes_secret.email
+    kubernetes_secret.email,
+    kubernetes_secret.eventhub,
+    kubernetes_secret.storage_account
   ]
 }

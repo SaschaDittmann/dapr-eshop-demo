@@ -11,7 +11,16 @@ namespace WebShop.Controllers
 {
     public class CartController : Controller
     {
+        /// <summary>
+        /// State store name.
+        /// </summary>
         private const string StoreName = "statestore";
+
+        /// <summary>
+        /// Pubsub component name for the orders queue.
+        /// </summary>
+        public const string PubsubName = "pubsub";
+
         private readonly ICatalogService _catalogService;
         private readonly ILogger<CartController> _logger;
         private readonly string _userId = "anonymous";
@@ -63,12 +72,21 @@ namespace WebShop.Controllers
 
         public async Task<IActionResult> Checkout([FromServices] DaprClient daprClient)
         {
+            _logger.LogDebug($"Enter Checkout");
             var state = await daprClient.GetStateEntryAsync<List<Item>>(StoreName, _userId);
+            _logger.LogInformation($"Submitting Order with {state.Value.Count} items");
+            await daprClient.PublishEventAsync<List<Item>>(
+                PubsubName,
+                "order",
+                state.Value
+            );
+            /*
             var response = await daprClient.InvokeMethodAsync<List<Item>, dynamic>(
                 "orderservice",
                 "order",
                 state.Value
             );
+            */
             return RedirectToAction("Completed");
         }
 

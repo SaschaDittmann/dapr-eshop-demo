@@ -12,6 +12,11 @@ namespace OrderService.Controllers
     [Route("[controller]")]
     public class OrderController : ControllerBase
     {
+        /// <summary>
+        /// Pubsub component name for the orders queue.
+        /// </summary>
+        public const string PubsubName = "pubsub";
+
         private readonly ILogger<OrderController> _logger;
 
         public OrderController(ILogger<OrderController> logger)
@@ -19,12 +24,11 @@ namespace OrderService.Controllers
             _logger = logger;
         }
 
-        //[Topic("pubsub", "submit")]
-        //[HttpPost("submit")]
-        [HttpPost()]
-        public async Task<ActionResult<OrderResponse>> Post(List<Item> items, [FromServices] DaprClient daprClient)
+        [Topic(PubsubName, "order")]
+        [HttpPost("order")]
+        public async Task<ActionResult<OrderResponse>> Order(List<Item> items, [FromServices] DaprClient daprClient)
         {
-            _logger.LogDebug("Enter submit");
+            _logger.LogDebug("Enter Order");
 
             // TODO: Process Order
             _logger.LogInformation($"Received an order with {items.Count} items.");
