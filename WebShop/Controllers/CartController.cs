@@ -37,7 +37,7 @@ namespace WebShop.Controllers
             if (state.Value == null)
             {
                 state.Value = new List<Item>();
-                state.Value.Add(new Item { Product = _catalogService.GetProductById(id), Quantity = 1 }); 
+                state.Value.Add(new Item {Product = await _catalogService.GetProductById(id), Quantity = 1});
             }
             else
             {
@@ -45,8 +45,9 @@ namespace WebShop.Controllers
                 if (index != -1)
                     state.Value[index].Quantity++;
                 else
-                    state.Value.Add(new Item { Product = _catalogService.GetProductById(id), Quantity = 1 });
+                    state.Value.Add(new Item {Product = await _catalogService.GetProductById(id), Quantity = 1});
             }
+
             await state.SaveAsync();
             return RedirectToAction("Index");
         }

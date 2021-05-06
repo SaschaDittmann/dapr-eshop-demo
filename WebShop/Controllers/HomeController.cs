@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Threading.Tasks;
 using WebShop.Models;
 using WebShop.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -17,10 +18,10 @@ namespace WebShop.Controllers
             _catalogService = catalogService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             _logger.LogInformation("Retrieving Products from CatalogService");
-            ViewBag.products = _catalogService.GetProducts();
+            ViewBag.products = await _catalogService.GetProducts();
             return View();
         }
 
@@ -32,7 +33,7 @@ namespace WebShop.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
         }
     }
 }

@@ -1,12 +1,13 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebShop.Models;
 
 namespace WebShop.Services
 {
     public interface ICatalogService
     {
-        List<Product> GetProducts();
+        Task<IEnumerable<Product>> GetProducts();
 
-        Product GetProductById(string id);
+        Task<Product> GetProductById(string id);
     }
 }
