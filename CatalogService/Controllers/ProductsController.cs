@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
 using CatalogService.Models;
@@ -13,7 +14,7 @@ namespace CatalogService.Controllers
     [Route("[controller]")]
     public class ProductsController : ControllerBase
     {
-        private static readonly List<Product> ProductCatalog = new List<Product>();
+        private static bool DatabaseInitialized = false;
         private const string ProductCountCmd = "SELECT COUNT(*) AS Count FROM products;";
         private const string GetProductsCmd = "SELECT * FROM products;";
         private const string GetProductByIdCmd = "SELECT * FROM products WHERE id='{0}';";
@@ -32,8 +33,10 @@ namespace CatalogService.Controllers
         [HttpGet]
         public async Task<IEnumerable<Product>> Get([FromServices] DaprClient daprClient)
         {
-            if (ProductCatalog.Count == 0)
+            if (!DatabaseInitialized) {
                 await SetupDatabase(daprClient);
+                DatabaseInitialized = true;
+            }
 
             _logger.LogInformation("Get all Products");
             var products = await daprClient.InvokeBindingAsync<String, List<Product>>(
@@ -51,8 +54,10 @@ namespace CatalogService.Controllers
         [HttpGet("{id}")]
         public async Task<Product> Get(string id, [FromServices] DaprClient daprClient)
         {
-            if (ProductCatalog.Count == 0)
+            if (!DatabaseInitialized) {
                 await SetupDatabase(daprClient);
+                DatabaseInitialized = true;
+            }
 
             _logger.LogInformation($"Get Products By Id ({id})");
             var productResponse = await daprClient.InvokeBindingAsync<String, List<Product>>(
