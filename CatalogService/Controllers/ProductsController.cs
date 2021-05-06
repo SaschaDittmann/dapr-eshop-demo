@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
 using CatalogService.Models;
@@ -14,14 +13,17 @@ namespace CatalogService.Controllers
     [Route("[controller]")]
     public class ProductsController : ControllerBase
     {
-        private static bool DatabaseInitialized = false;
         private const string ProductCountCmd = "SELECT COUNT(*) AS Count FROM products;";
         private const string GetProductsCmd = "SELECT * FROM products;";
         private const string GetProductByIdCmd = "SELECT * FROM products WHERE id='{0}';";
+
         private const string CreateTableCmd =
             "CREATE TABLE IF NOT EXISTS products (id varchar(50) PRIMARY KEY,name varchar(255) NULL,price decimal  NULL, photo varchar(255)  NULL);";
+
         private const string InsertProductCmd =
             "INSERT INTO products(id,name,price,photo) VALUES('{0}','{1}',{2},'{3}');";
+
+        private static bool DatabaseInitialized = false;
 
         private readonly ILogger<ProductsController> _logger;
 

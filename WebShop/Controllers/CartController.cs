@@ -2,19 +2,19 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Dapr.Client;
-using WebShop.Models;
-using WebShop.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using WebShop.Models;
+using WebShop.Services;
 
 namespace WebShop.Controllers
 {
     public class CartController : Controller
     {
         private const string StoreName = "statestore";
-        private readonly string _userId = "anonymous";
-        private readonly ILogger<CartController> _logger;
         private readonly ICatalogService _catalogService;
+        private readonly ILogger<CartController> _logger;
+        private readonly string _userId = "anonymous";
 
         public CartController(ILogger<CartController> logger, ICatalogService catalogService)
         {

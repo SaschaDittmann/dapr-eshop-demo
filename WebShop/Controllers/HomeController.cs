@@ -1,16 +1,16 @@
 ﻿using System.Diagnostics;
 using System.Threading.Tasks;
-using WebShop.Models;
-using WebShop.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using WebShop.Models;
+using WebShop.Services;
 
 namespace WebShop.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly ICatalogService _catalogService;
+        private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger, ICatalogService catalogService)
         {
