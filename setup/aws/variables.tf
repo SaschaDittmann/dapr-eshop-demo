@@ -31,3 +31,30 @@ variable "workers_additional_policies" {
   type        = list(string)
   default     = []
 }
+
+variable "mysql_admin_username" {
+  type        = string
+  default     = "dapradmin"
+  description = "MySQL Admin Username"
+}
+
+variable "mysql_admin_password" {
+  type        = string
+  description = "MySQL Admin Password"
+}
+
+variable "sendgrid_api_key" {
+  type        = string
+  description = "Sendgrid API Key"
+}
+
+variable "sendgrid_from" {
+  type        = string
+  description = "Sendgrid 'Email From' value"
+}
+
+variable "enable_aspnet_development" {
+  type        = bool
+  default     = false
+  description = "Enable ASP.NET Core Development mode"
+}
