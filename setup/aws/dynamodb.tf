@@ -12,5 +12,6 @@ resource "aws_dynamodb_table" "statestore" {
 
   tags = {
     Name = "${var.prefix}-dynamodb"
+    App  = var.prefix
   }
 }

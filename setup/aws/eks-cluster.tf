@@ -23,6 +23,11 @@ module "eks" {
       additional_security_group_ids = [aws_security_group.all_worker_mgmt.id]
     }
   ]
+
+  tags = {
+    Name = "${var.prefix}-eks"
+    App  = var.prefix
+  }
 }
 
 data "aws_eks_cluster" "cluster" {
