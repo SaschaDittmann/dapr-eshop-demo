@@ -1,0 +1,50 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: pubsub
+spec:
+  type: pubsub.gcp.pubsub
+  version: v1
+  metadata:
+  - name: type
+    secretKeyRef:
+      name: gcp-sa-access
+      key: type
+  - name: projectId
+    secretKeyRef:
+      name: gcp-sa-access
+      key: project-id
+  - name: privateKeyId
+    secretKeyRef:
+      name: gcp-sa-access
+      key: private-key-id
+  - name: privateKey
+    secretKeyRef:
+      name: gcp-sa-access
+      key: private-key
+  - name: client_email
+    secretKeyRef:
+      name: gcp-sa-access
+      key: client-email
+  - name: client_id
+    secretKeyRef:
+      name: gcp-sa-access
+      key: client-id
+  - name: auth_uri
+    secretKeyRef:
+      name: gcp-sa-access
+      key: auth-uri
+  - name: token_uri
+    secretKeyRef:
+      name: gcp-sa-access
+      key: token-uri
+  - name: auth_provider_x509_cert_url
+    secretKeyRef:
+      name: gcp-sa-access
+      key: auth-provider-x509-cert-url
+  - name: client_x509_cert_url
+    secretKeyRef:
+      name: gcp-sa-access
+      key: client-x509-cert-url
+  - name: disableEntityManagement
+    value: "false"
