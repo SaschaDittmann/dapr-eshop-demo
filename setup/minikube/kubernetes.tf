@@ -37,17 +37,6 @@ resource "kubernetes_secret" "catalog" {
   type = "Opaque"
 }
 
-resource "kubernetes_secret" "email" {
-  metadata {
-    name = "sendgrid"
-  }
-  data = {
-    api-key    = var.sendgrid_api_key
-    email-from = var.sendgrid_from
-  }
-  type = "Opaque"
-}
-
 module "kubernetes" {
   source = "../kubernetes"
 
@@ -61,6 +50,9 @@ module "kubernetes" {
   replicas_orderservice          = 1
   image_pull_policy_orderservice = "IfNotPresent"
   enable_aspnet_development      = var.enable_aspnet_development
+  sendgrid_api_key               = var.sendgrid_api_key
+  sendgrid_from                  = var.sendgrid_from
+  default_email_to               = var.default_email_to
 
   depends_on = [
     null_resource.build_images,

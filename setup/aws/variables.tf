@@ -43,6 +43,12 @@ variable "mysql_admin_password" {
   description = "MySQL Admin Password"
 }
 
+variable "enable_aspnet_development" {
+  type        = bool
+  default     = false
+  description = "Enable ASP.NET Core Development mode"
+}
+
 variable "sendgrid_api_key" {
   type        = string
   description = "Sendgrid API Key"
@@ -53,8 +59,7 @@ variable "sendgrid_from" {
   description = "Sendgrid 'Email From' value"
 }
 
-variable "enable_aspnet_development" {
-  type        = bool
-  default     = false
-  description = "Enable ASP.NET Core Development mode"
+variable "default_email_to" {
+  type        = string
+  description = "Default 'Email To' address"
 }

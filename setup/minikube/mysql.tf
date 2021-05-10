@@ -116,7 +116,7 @@ resource "null_resource" "setup_database" {
   provisioner "local-exec" {
     command = <<-EOT
       mysql_pod=$(kubectl get pods | grep mysql | awk '{print $1}')
-      kubectl exec $mysql_pod -- mysql -u root --password='${local.mysql_admin_password}' -e "create database catalog;"
+      kubectl exec $mysql_pod -- mysql -u root --password='${local.mysql_admin_password}' -e "create database if not exists catalog;"
     EOT
   }
 

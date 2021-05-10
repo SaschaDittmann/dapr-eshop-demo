@@ -54,3 +54,18 @@ variable "enable_aspnet_development" {
   default     = false
   description = "Enable ASP.NET Core Development mode"
 }
+
+variable "sendgrid_api_key" {
+  type        = string
+  description = "Sendgrid API Key"
+}
+
+variable "sendgrid_from" {
+  type        = string
+  description = "Sendgrid 'Email From' value"
+}
+
+variable "default_email_to" {
+  type        = string
+  description = "Default 'Email To' address"
+}

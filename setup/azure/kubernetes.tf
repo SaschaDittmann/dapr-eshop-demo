@@ -19,17 +19,6 @@ resource "kubernetes_secret" "catalog_mysql" {
   type = "Opaque"
 }
 
-resource "kubernetes_secret" "email" {
-  metadata {
-    name = "sendgrid"
-  }
-  data = {
-    api-key    = var.sendgrid_api_key
-    email-from = var.sendgrid_from
-  }
-  type = "Opaque"
-}
-
 resource "kubernetes_secret" "eventhub" {
   metadata {
     name = "azure-eventhub"
@@ -58,11 +47,13 @@ module "kubernetes" {
   image_catalog             = "${azurerm_container_registry.acr.login_server}/catalog:latest"
   image_orderservice        = "${azurerm_container_registry.acr.login_server}/orderservice:latest"
   enable_aspnet_development = var.enable_aspnet_development
+  sendgrid_api_key          = var.sendgrid_api_key
+  sendgrid_from             = var.sendgrid_from
+  default_email_to          = var.default_email_to
 
   depends_on = [
     azurerm_kubernetes_cluster.k8s,
     kubernetes_secret.catalog_mysql,
-    kubernetes_secret.email,
     kubernetes_secret.eventhub,
     kubernetes_secret.storage_account
   ]

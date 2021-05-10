@@ -33,13 +33,17 @@ namespace OrderService.Controllers
             // TODO: Process Order
             _logger.LogInformation($"Received an order with {items.Count} items.");
 
-            // Send Confirmation Email
+            _logger.LogDebug("Retrieving Secrets");
+            var defaultEmailSettings = await daprClient.GetSecretAsync(
+                "kubernetes", "email-default-settings");
+
+            _logger.LogDebug("Sending Confirmation Email");
             await daprClient.InvokeBindingAsync<string>(
                 "email", 
                 "create", 
                 "<h1>Order Confirmation</h1>Thank you for your order at e-Shop Dapr Demo.",
                 new Dictionary<string, string>{
-                    {"emailTo", "sascha.dittmann@microsoft.com"},
+                    {"emailTo", defaultEmailSettings["email-to"]},
                     {"subject", "e-Shop Dapr Demo - Order Confimation"},
                 });
 

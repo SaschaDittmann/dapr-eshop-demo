@@ -32,17 +32,6 @@ resource "kubernetes_secret" "catalog_mysql" {
   type = "Opaque"
 }
 
-resource "kubernetes_secret" "email" {
-  metadata {
-    name = "sendgrid"
-  }
-  data = {
-    api-key    = var.sendgrid_api_key
-    email-from = var.sendgrid_from
-  }
-  type = "Opaque"
-}
-
 resource "kubernetes_secret" "snssqs" {
   metadata {
     name = "aws-snssqs"
@@ -66,13 +55,15 @@ module "kubernetes" {
   image_catalog             = "${aws_ecr_repository.catalog.repository_url}:latest"
   image_orderservice        = "${aws_ecr_repository.orderservice.repository_url}:latest"
   enable_aspnet_development = var.enable_aspnet_development
+  sendgrid_api_key          = var.sendgrid_api_key
+  sendgrid_from             = var.sendgrid_from
+  default_email_to          = var.default_email_to
 
   depends_on = [
     null_resource.build_images,
     null_resource.deploy_dapr_components,
     kubernetes_secret.dynamodb,
     kubernetes_secret.catalog_mysql,
-    kubernetes_secret.email,
     kubernetes_secret.snssqs,
     aws_vpc_endpoint.dynamodb,
     aws_vpc_endpoint.rds,
